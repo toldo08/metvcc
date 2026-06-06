@@ -38,7 +38,6 @@ jobs:
         PLAYIT_SECRET: ${{ secrets.PLAYIT_SECRET }}
       run: |
         cd minecraft
-        # Khởi chạy playit ngầm bằng mã bí mật của bạn để kết nối IP cố định
-        sudo playit --secret "$PLAYIT_SECRET" &
-        # Chạy server Minecraft cấp 5GB RAM cực mạnh từ máy ảo GitHub
-        java -Xmx5G -Xms2G -jar server.jar nogui
+        # Ép playit kết nối qua cụm máy chủ Châu Á để giảm ping
+        sudo playit --secret "$PLAYIT_SECRET" --preferred-region asia &
+        $JAVA_HOME/bin/java -Xmx5G -Xms2G -jar server.jar nogui
