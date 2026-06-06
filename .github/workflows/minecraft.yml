@@ -1,0 +1,44 @@
+name: Minecraft Server Playit
+
+on:
+  workflow_dispatch: # Cho phép bạn chủ động bấm nút Bật/Tắt server thủ công bất cứ lúc nào
+
+jobs:
+  run-server:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Set up Java 25
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: '25'
+
+    - name: Install Playit.gg
+      run: |
+        sudo wget -O /usr/local/bin/playit https://github.com/playit-cloud/playit-agent/releases/latest/download/playit-linux-amd64
+        sudo chmod +x /usr/local/bin/playit
+
+    - name: Create Minecraft Server Files
+      run: |
+        mkdir minecraft
+        cd minecraft
+        # Tải file chạy Paper 26.1.2 bằng giả lập User-Agent tránh lỗi cache miss
+        wget -U "Mozilla/5.0" -O server.jar https://fill-data.papermc.io/v1/objects/d30fae0c74092b10855f0412ca6b265c60301a013d34bc28a2a41bf5682dd80b/paper-26.1.2-69.jar
+        # Đồng ý điều khoản EULA
+        echo "eula=true" > eula.txt
+        # Cấu hình server (Tắt online-mode để cho phép cả TLauncher/game crack vào chơi)
+        echo -e "online-mode=false\nserver-port=25565\nview-distance=8" > server.properties
+
+    - name: Start Playit and Minecraft Server
+      env:
+        PLAYIT_SECRET: ${{ secrets.PLAYIT_SECRET }}
+      run: |
+        cd minecraft
+        # Khởi chạy playit ngầm bằng mã bí mật của bạn để kết nối IP cố định
+        sudo playit --secret "$PLAYIT_SECRET" &
+        # Chạy server Minecraft cấp 5GB RAM cực mạnh từ máy ảo GitHub
+        java -Xmx5G -Xms2G -jar server.jar nogui
