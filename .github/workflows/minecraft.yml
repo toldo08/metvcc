@@ -39,5 +39,4 @@ jobs:
       run: |
         cd minecraft
         # Ép playit kết nối qua cụm máy chủ Châu Á để giảm ping
-        sudo playit --secret "$PLAYIT_SECRET" --preferred-region asia &
-        $JAVA_HOME/bin/java -Xmx5G -Xms2G -jar server.jar nogui
+        sudo playit --secret "$PLAYIT_SECRET" --preferred-region asia & $JAVA_HOME/bin/java -Xmx5G -Xms2G -jar server.jar nogui
