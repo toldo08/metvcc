@@ -38,6 +38,7 @@ jobs:
         PLAYIT_SECRET: ${{ secrets.PLAYIT_SECRET }}
       run: |
         cd minecraft
-        # Ép playit kết nối qua cụm máy chủ Châu Á để giảm ping
-        sudo playit --secret "$PLAYIT_SECRET" --preferred-region asia & 
-        java -Xmx5G -Xms2G -jar server.jar nogui
+        # Ép playit kết nối qua cụm máy chủ Châu Á để giảm ping và fix delay
+        sudo playit --secret "$PLAYIT_SECRET" --preferred-region asia &
+        # Ép hệ thống dùng chính xác Java 25 (Temurin) vừa cài để tránh lỗi LinkageError
+        $JAVA_HOME/bin/java -Xmx5G -Xms2G -jar server.jar nogui
